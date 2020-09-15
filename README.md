@@ -11,10 +11,21 @@ That's it!
 
 You can find out more about ElasticSearch at [https://www.elastic.co/products/elasticsearch](https://www.elastic.co/products/elasticsearch)
 
+## Using FacetView2
 
-### Publications page that already works
-You should be able to copy this repo to your webserver, then hit the publications.html page. It should query to our running elasticsearch instance for data
+### Example people and publication pages for CU Experts and CU Experts Direct
 
+There are example pages to support people and publication pages.
+The .ftl files are for inclusion in CU Experts.
+The .html files are for standalone pages.
+
+To install these pages
+1. Copy this current repository to the target directory which will serve these assets
+2. Copy the people and publication pages to the location that will serve them
+3. You probably have to adjust the pathing of the css and javascript assets called in the pages.
+4. You might have to adjust the search_url variable to point to the Elastic index.
+
+Next just hit the publications.html page. It should query to our running elasticsearch instance for data
 
 ### Setting up the faceted browser from scratch
 
@@ -62,3 +73,51 @@ Then add a ``div`` with the HTML class referenced in the script to the HTML body
 That should be it!
 
 See the webpages in /html for examples of more complex facetview2 configurations and for how to use JS or templates to specify the HTML shown for result set entries.
+
+
+## Customisation
+
+FacetView2 has been written to allow extensive customisation within a flexible but constrained page framework.
+
+There will be more documentation here on how to do that, but in the mean time, take a look at the source of jquery.facetview.js for the config options and templates that can be replaced for custom display.
+
+## Querying the Elasticsearch index directly
+
+It is possible to just query the Elasticsearch index for data and bypass the javascript interface.
+Please reach out to the ODA Engineering team for the appropriate Elasticsearch endpoint.
+This page won't go into details on how to construct an Elasticsearch query. Details can be seen on the Elasticsearch guide: https://www.elastic.co/guide/en/elasticsearch/reference/current/search-your-data.html
+Query examples below follow formats similar to that used by the Facetview software. They consist of filters and aggregations.
+
+### Elasticsearch endpoint on AWS server
+https://search-experts-pubs-unoedenr36fpm7alfpboeihcnq.us-east-2.es.amazonaws.com/fispubs-v1/_search
+
+### Elasticsearch publication queries for common identifiers such as department ID, fisID, or email
+
+Useful fields to filter on organizations, individuals, or both.
+
+Department ID ( the HCM id of a department ) - authors.organization.id.keyword
+FISID ( the identifier of a person in the FIS database ) -  authors.fisID.keyword
+Email ID ( The email ID that the individual specified via the FRPA interface ) - authors.email.keyword
+
+##### This query demonstrates querying IBS by department id and then History by department name.:
+
+    {"query":{"bool":{"must":[{"term":{"authors.organization.id.keyword":"10071"}},{"term":{"authors.organization.name.keyword":"History"}},{"term":{"authors.name.keyword":"Gutmann,+Myron++P."}},{"match_all":{}}]}},"sort":[{"publicationYear.keyword":{"order":"desc"}}],"from":0,"size":20,"aggs":{"mostSpecificType.keyword":{"terms":{"field":"mostSpecificType.keyword","size":115,"order":{"_count":"desc"}}},"authors.name.keyword":{"terms":{"field":"authors.name.keyword","size":120,"order":{"_count":"desc"}}},"publishedIn.name.keyword":{"terms":{"field":"publishedIn.name.keyword","size":115,"order":{"_count":"desc"}}},"publicationYear.keyword":{"terms":{"field":"publicationYear.keyword","size":125,"order":{"_count":"desc"}}},"authors.organization.name.keyword":{"terms":{"field":"authors.organization.name.keyword","size":115,"order":{"_count":"desc"}}},"authors.researchArea.name.keyword":{"terms":{"field":"authors.researchArea.name.keyword","size":115,"order":{"_count":"desc"}}},"cuscholarexists.keyword":{"terms":{"field":"cuscholarexists.keyword","size":115,"order":{"_count":"desc"}}},"amscore":{"range":{"field":"amscore","ranges":[{"to":0.001},{"to":100,"from":0.001},{"to":500,"from":100},{"from":500}]}}}}
+
+##### This queries an department by ID AND a person by fisId:
+
+    { "query": { "bool": { "must": [ { "term": { "authors.organization.id.keyword": "10071" } }, { "term": { "authors.fisId.keyword": "154905" } }, { "term": { "authors.name.keyword": "Gutmann,+Myron++P." } }, { "match_all": {} } ] } }, "sort": [ { "publicationYear.keyword": { "order": "desc" } } ], "from": 0, "size": 20, "aggs": { "mostSpecificType.keyword": { "terms": { "field": "mostSpecificType.keyword", "size": 115, "order": { "_count": "desc" } } }, "authors.name.keyword": { "terms": { "field": "authors.name.keyword", "size": 120, "order": { "_count": "desc" } } }, "publishedIn.name.keyword": { "terms": { "field": "publishedIn.name.keyword", "size": 115, "order": { "_count": "desc" } } }, "publicationYear.keyword": { "terms": { "field": "publicationYear.keyword", "size": 125, "order": { "_count": "desc" } } }, "authors.organization.name.keyword": { "terms": { "field": "authors.organization.name.keyword", "size": 115, "order": { "_count": "desc" } } }, "authors.researchArea.name.keyword": { "terms": { "field": "authors.researchArea.name.keyword", "size": 115, "order": { "_count": "desc" } } }, "cuscholarexists.keyword": { "terms": { "field": "cuscholarexists.keyword", "size": 115, "order": { "_count": "desc" } } }, "amscore": { "range": { "field": "amscore", "ranges": [ { "to": 0.001 }, { "to": 100, "from": 0.001 }, { "to": 500, "from": 100 }, { "from": 500 } ] } } } }
+
+##### Finally the same query that uses the department ID for IBS and the email address for a person instead of the fisId
+
+    { "query": { "bool": { "must": [ { "term": { "authors.organization.id.keyword": "10071" } }, { "term": { "authors.organization.name.keyword": "History" } }, { "term": { "authors.email.keyword": "Myron.Gutmann@Colorado.EDU" } }, { "match_all": {} } ] } }, "sort": [ { "publicationYear.keyword": { "order": "desc" } } ], "from": 0, "size": 20, "aggs": { "mostSpecificType.keyword": { "terms": { "field": "mostSpecificType.keyword", "size": 115, "order": { "_count": "desc" } } }, "authors.name.keyword": { "terms": { "field": "authors.name.keyword", "size": 120, "order": { "_count": "desc" } } }, "publishedIn.name.keyword": { "terms": { "field": "publishedIn.name.keyword", "size": 115, "order": { "_count": "desc" } } }, "publicationYear.keyword": { "terms": { "field": "publicationYear.keyword", "size": 125, "order": { "_count": "desc" } } }, "authors.organization.name.keyword": { "terms": { "field": "authors.organization.name.keyword", "size": 115, "order": { "_count": "desc" } } }, "authors.researchArea.name.keyword": { "terms": { "field": "authors.researchArea.name.keyword", "size": 115, "order": { "_count": "desc" } } }, "cuscholarexists.keyword": { "terms": { "field": "cuscholarexists.keyword", "size": 115, "order": { "_count": "desc" } } }, "amscore": { "range": { "field": "amscore", "ranges": [ { "to": 0.001 }, { "to": 100, "from": 0.001 }, { "to": 500, "from": 100 }, { "from": 500 } ] } } } }
+
+Copyright and License
+=====================
+
+Copyright 2014 Cottage Labs.
+
+Licensed under the MIT Licence
+
+twitter bootstrap: http://twitter.github.com/bootstrap/
+MIT License: http://www.opensource.org/licenses/mit-license.php
+
