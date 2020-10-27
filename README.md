@@ -75,11 +75,31 @@ That should be it!
 See the webpages in /html for examples of more complex facetview2 configurations and for how to use JS or templates to specify the HTML shown for result set entries.
 
 
-## Customisation
+### Customisation
 
 FacetView2 has been written to allow extensive customisation within a flexible but constrained page framework.
 
-There will be more documentation here on how to do that, but in the mean time, take a look at the source of jquery.facetview.js for the config options and templates that can be replaced for custom display.
+#### Pre-populating a page with a set of users
+You might want to create a page with a certain set of users. This can be tricky of the users aren't organized in a group.
+You can use the predefined_filters{} object to do this.
+If you want to use a predefined filter, that filter also needs to be a facet, but the facet can be hidden.
+Below is an example of how to do this, note the authors.fisID.keyword facet and how the final attribute is hidden:
+
+               predefined_filters : {
+                   "authors.fisId.keyword" : ["118372","140077"]
+                },
+                facets: [
+                    {'field': 'mostSpecificType.keyword', 'display': 'Publication Type'},
+                    {'field': 'authors.name.keyword', 'size': 20, 'display': 'Author'},
+                    {'field': 'authors.fisId.keyword', 'size': 20, 'display': 'FisID', 'hidden': true},
+                    {'field': 'publishedIn.name.keyword', 'display': 'Published In'},
+
+So far I also couldn’t add multiple predefined filters, for example adding authors.name.keyword underneath the authors.fisId.keyword didn’t work.
+               predefined_filters : {
+                   "authors.fisId.keyword" : ["118372","140077"],
+                   “authors.name.keyword”: [“Elsborg, Don”]
+                },
+
 
 ## Querying the Elasticsearch index directly
 
