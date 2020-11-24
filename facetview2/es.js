@@ -309,6 +309,8 @@ function elasticSearchQuery(params) {
         qs = {"query" : ftq}
     }
     
+    qs["track_total_hits"] = options.track_total_hits
+
     // sort order and direction
     options.sort && options.sort.length > 0 ? qs['sort'] = options.sort : "";
     
@@ -469,7 +471,7 @@ function elasticSearchSuccess(callback) {
         var resultobj = {
             "records" : [],
             "start" : "",
-            "found" : data.hits.total,
+            "found" : data.hits.total.value,
             "facets" : {}
         };
         

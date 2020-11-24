@@ -221,6 +221,8 @@ function getUrlVars() {
         var defaults = {
             ///// elasticsearch parameters /////////////////////////////
             
+            "track_total_hits" : "true",
+
             // the base search url which will respond to elasticsearch queries.  Generally ends with _search
             "search_url" : "http://localhost:9200/_search",
             
