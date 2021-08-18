@@ -227,12 +227,13 @@ function getUrlVars() {
             "search_url": "http://localhost:9200/_search",
 
             // username and password for http basic_auth - new for CU Boulder
-            "username": "anon",
-            "password": "anon",
+            // CRUCIAL! Only set the username:password for indexes that require it, otherwise it will fail with a 403
+            "username": null,
+            "password": null,
 
             // datatype for ajax requests to use - overall recommend using jsonp
             //DRE            "datatype" : "jsonp",
-            "datatype": "json",
+            //DRE "datatype": "json",
 
             // if set, should be either * or ~
             // if *, * will be prepended and appended to each string in the freetext search term

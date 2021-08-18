@@ -537,7 +537,9 @@ function doElasticSearchQuery(params) {
         data: { source_content_type: contenttype, source: querystring },
         dataType: datatype,
         beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + btoa(username + ':' + password));
+            if (username != null) {
+                xhr.setRequestHeader("Authorization", "Basic " + btoa(username + ':' + password));
+            }
         },
         contentType: contenttype,
         source_content_type: contenttype,
