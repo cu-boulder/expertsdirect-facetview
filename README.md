@@ -1,10 +1,12 @@
 ## Overview
 
 The faceted search browsers are powered by [FacetView2](https://github.com/tetherless-world/facetview2) - a pure javascript frontend for ElasticSearch search indices that let you easily embed a faceted browse front end into any web page.
-This is now just copied locally under this repo.
+This is now just copied locally under this repo because the original repositories are no longer maintained.
+Additionally, the local code has been modified to work with Elasticsearch versions > 7.
 
 To configure a working faceted browser you need:
-1. A running instance of ElasticSearch with a populated index - in this case experts.colorado.edu/es
+1. A running instance of ElasticSearch with a populated index 
+   - in this case: https://search-experts-direct-cz3fpq4rlxcbn5z27vzq4mpzaa.us-east-2.es.amazonaws.com/fispubs-v1
 2. A webpage with references to facetview2 scripts and an embedded configuration
 
 That's it!
@@ -21,11 +23,12 @@ The .html files are for standalone pages.
 
 To install these pages
 1. Copy this current repository to the target directory which will serve these assets
-2. Copy the people and publication pages to the location that will serve them
+2. Copy the publication.html page to the location that will serve them
 3. You probably have to adjust the pathing of the css and javascript assets called in the pages.
 4. You might have to adjust the search_url variable to point to the Elastic index.
+5. The production Elastic index on AWS uses basic http authentication, the username and password below are for public access so they are not a secret.
 
-Next just hit the publications.html page. It should query to our running elasticsearch instance for data
+Next just hit the publications.html page. It should query  our running elasticsearch instance for data
 
 ### Setting up the faceted browser from scratch
 
@@ -50,7 +53,9 @@ Then add a script somewhere to your page that actually calls and sets up the fac
 <script type="text/javascript">
 jQuery(document).ready(function($) {
   $('.facet-view-simple').facetview({
-    search_url: 'http://localhost:9200/myindex/type/_search',
+    search_url: 'https://search-experts-direct-cz3fpq4rlxcbn5z27vzq4mpzaa.us-east-2.es.amazonaws.com/fispubs-v1/_search',
+    username: 'anon',
+    password: 'anonyM0us!',
     facets: [
         {'field': 'publisher.exact', 'size': 100, 'order':'term', 'display': 'Publisher'},
         {'field': 'author.name.exact', 'display': 'author'},
@@ -109,7 +114,11 @@ This page won't go into details on how to construct an Elasticsearch query. Deta
 Query examples below follow formats similar to that used by the Facetview software. They consist of filters and aggregations.
 
 ### Elasticsearch endpoint on AWS server
-https://search-experts-pubs-unoedenr36fpm7alfpboeihcnq.us-east-2.es.amazonaws.com/fispubs-v1/_search
+# A username and password is required. The public credential is listed below.
+    search_url: 'https://search-experts-direct-cz3fpq4rlxcbn5z27vzq4mpzaa.us-east-2.es.amazonaws.com/fispubs-v1/_search',
+    username: 'anon',
+    password: 'anonyM0us!'
+
 
 ### Elasticsearch publication queries for common identifiers such as department ID, fisID, or email
 
@@ -134,9 +143,8 @@ Email ID ( The email ID that the individual specified via the FRPA interface ) -
 Copyright and License
 =====================
 
-Copyright 2014 Cottage Labs.
-
-Licensed under the MIT Licence
+Copyright 2014 Cottage Labs.  Licensed under the MIT Licence
+University of Colorado, Boulder - License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
 
 twitter bootstrap: http://twitter.github.com/bootstrap/
 MIT License: http://www.opensource.org/licenses/mit-license.php
