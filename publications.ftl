@@ -24,7 +24,9 @@
     <script type="text/javascript">
         jQuery(document).ready(function($) {
             $('.facet-view-simple').facetview({
-                search_url: '/es/fispubs-v1/publication/_search',
+                search_url: 'https://search-experts-direct-cz3fpq4rlxcbn5z27vzq4mpzaa.us-east-2.es.amazonaws.com/fispubs-v1/_search',
+                username: 'anon',
+                password: 'anonyM0us!',
                 page_size: 20,
                 sort: [{"publicationYear.keyword" : {"order" : "desc"}}],
                 sharesave_link: true,
