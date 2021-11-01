@@ -170,8 +170,15 @@
 
     <script type="text/javascript">
         jQuery(document).ready(function($) {
+	    if (document.location.hostname.search("setup-dev") !== -1) {  
+                v_search_url: 'https://search-experts-direct-cz3fpq4rlxcbn5z27vzq4mpzaa.us-east-2.es.amazonaws.com/fispeople-setup-dev-v1/_search';
+	    } 
+	    else 
+	    { 
+                v_search_url: 'https://search-experts-direct-cz3fpq4rlxcbn5z27vzq4mpzaa.us-east-2.es.amazonaws.com/fispeople-v1/_search';
+	    }
             $('.facet-view-simple').facetview({
-                search_url: 'https://search-experts-direct-cz3fpq4rlxcbn5z27vzq4mpzaa.us-east-2.es.amazonaws.com/fispeople-v1/_search',
+                search_url: v_search_url,
                 username: 'anon',
                 password: 'anonyM0us!',
                 page_size: 10,
