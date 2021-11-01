@@ -23,8 +23,15 @@
 
     <script type="text/javascript">
         jQuery(document).ready(function($) {
+            if (document.location.hostname.search("setup-dev") !== -1) {  
+                v_search_url = 'https://search-experts-direct-cz3fpq4rlxcbn5z27vzq4mpzaa.us-east-2.es.amazonaws.com/fispubs-setup-dev-v1/_search';
+	    } 
+	    else 
+	    { 
+                v_search_url = 'https://search-experts-direct-cz3fpq4rlxcbn5z27vzq4mpzaa.us-east-2.es.amazonaws.com/fispubs-v1/_search';
+	    }
             $('.facet-view-simple').facetview({
-                search_url: 'https://search-experts-direct-cz3fpq4rlxcbn5z27vzq4mpzaa.us-east-2.es.amazonaws.com/fispubs-v1/_search',
+                search_url: v_search_url,
                 username: 'anon',
                 password: 'anonyM0us!',
                 page_size: 20,
@@ -54,6 +61,7 @@
                 render_result_record: function(options, record)
                 {
 
+                    var pub = record["uri"];
                     var doi = record["doi"];
                     var doiUrl = "https://dx.doi.org/"+record["doi"];
                     var escapedDOI = encodeURIComponent(doi).replace(/-/g, "--");
@@ -64,7 +72,7 @@
                     var html = "<tr><td>";
 
                     if (record["name"]) {
-                        html += "<strong><h4><a href=\""+record["uri"]+"\" target=\"_blank\">"+record["name"]+"</a></h4></strong>";
+                        html += "<strong><h4><a href=\""+record["uri"]+"\" target=\"_blank\" onclick=\"ga('send', 'event', 'Experts Link', this.href, 'Publication Label'); return true;\" >"+record["name"]+"</a></h4></strong>";
                     }
 
                         if (record["doi"]) {
@@ -77,7 +85,7 @@
                               for (var i = 0; i < websites.length; i++) {
 			          if (websites[i]["name"] == "CU Scholar Open Access")
 			          {
-			            html += "<a href=\"" + websites[i]["uri"] + "\" title=\"" + websites[i]["name"] + "\" target=\"_blank\"  onclick=\"ga('send', 'event', 'Publication OA Link', this.href); return true;\" ><img src=" + CUScholarBadgeURL + "></a>";
+			            html += "<a href=\"" + websites[i]["uri"] + "\" title=\"" + websites[i]["name"] + "\" target=\"_blank\"  onclick=\"ga('send', 'event', 'CU Scholar OA Link', this.href); return true;\" ><img src=" + CUScholarBadgeURL + "></a>";
 			          }
 			          else {
 			            html += "<a href=\"" + websites[i]["uri"] + "\" title=\"" + websites[i]["name"] + "\" target=\"_blank\"  onclick=\"ga('send', 'event', 'Publication OA Link', this.href); return true;\" ><img src=" + bestOaBadgeURL + "></a>";
@@ -93,7 +101,7 @@
                     if (record["authors"]) {
                         html += "<span><small>CU Boulder Authors: ";
                         for (var i = 0; i < record["authors"].length; i++) {
-                            html += "<a href=\"" + record["authors"][i]["uri"] + "\" target=\"_blank\">" + record["authors"][i]["name"] + "</a>";
+                            html += "<a href=\"" + record["authors"][i]["uri"] + "\" target=\"_blank\" target=\"_blank\" onclick=\"ga('send', 'event', 'Experts Link', this.href); return true;\" >" + record["authors"][i]["name"] + "</a>";
                             if (i < record["authors"].length - 1) {
                                 html += "; ";
                             }
@@ -104,7 +112,7 @@
                     if (record["subjectArea"]) {
                         html += "<br /><span>Subject Areas: ";
                         for(var i = 0; i < record["subjectArea"].length; i++) {
-                            html += "<a href=\"" + record["subjectArea"][i]["uri"] + "\" target=\"_blank\">" + record["subjectArea"][i]["name"] + "</a>";
+                            html += "<a href=\"" + record["subjectArea"][i]["uri"] + "\" target=\"_blank\" target=\"_blank\" onclick=\"ga('send', 'event', 'Experts Link', this.href); return true;\" >" + record["subjectArea"][i]["name"] + "</a>";
                             if (i < record["subjectArea"].length - 1) {
                                 html += "; ";
                             }
@@ -113,7 +121,7 @@
                     }
 
                     if (record["publishedIn"]) {
-                        html += "<br /><span>Published in: <a href=\""+record["publishedIn"]["uri"]+"\" target=\"_blank\">"+record["publishedIn"]["name"]+"</a></span>";
+                        html += "<br /><span>Published in: <a href=\""+record["publishedIn"]["uri"]+"\" target=\"_blank\" target=\"_blank\" onclick=\"ga('send', 'event', 'Experts Link', this.href); return true;\" >"+record["publishedIn"]["name"]+"</a></span>";
                     }
 
 
@@ -129,14 +137,14 @@
 
 
                     if (record["presentedAt"]) {
-                        html += "<br /><span>Presented at: <a href=\""+record["presentedAt"]["uri"]+"\" target=\"_blank\">"+record["presentedAt"]["name"]+"</a></span>";
+                        html += "<br /><span>Presented at: <a href=\""+record["presentedAt"]["uri"]+"\" target=\"_blank\" target=\"_blank\" onclick=\"ga('send', 'event', 'Experts Link', this.href); return true;\" >"+record["presentedAt"]["name"]+"</a></span>";
                     }
 
                     // Badges
 
                     html += "<br><div class='badge'>"
 
-                   html += "<div class='altmetric-embed' data-link-target='_blank' data-hide-no-mentions='true' data-badge-popover='left' data-doi=\""+record["doi"]+"\"></div>"
+                   html += "<div class='altmetric-embed' data-link-target='_blank' onclick=\"ga('send','event','Altmetric Link', '" + pub + "'); return true;\" data-hide-no-mentions='true' data-badge-popover='left' data-doi=\""+record["doi"]+"\"></div>"
 
                     html += "</div>"
 
