@@ -119,6 +119,12 @@ Query examples below follow formats similar to that used by the Facetview softwa
     username: 'anon',
     password: 'anonyM0us!'
 
+# To query public publication data from the index from a browser:
+https://anon:anonyM0us!@search-experts-direct-cz3fpq4rlxcbn5z27vzq4mpzaa.us-east-2.es.amazonaws.com/fispubs-v1/_search
+
+# To query public people data from the index via a browser:
+https://anon:anonyM0us!@search-experts-direct-cz3fpq4rlxcbn5z27vzq4mpzaa.us-east-2.es.amazonaws.com/fispeople-v1/_search
+
 
 ### Elasticsearch publication queries for common identifiers such as department ID, fisID, or email
 

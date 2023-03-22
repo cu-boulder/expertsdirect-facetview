@@ -171,7 +171,9 @@
     <script type="text/javascript">
         jQuery(document).ready(function($) {
             $('.facet-view-simple').facetview({
-                search_url: '/es/fis/person/_search',
+                search_url: 'https://search-experts-direct-cz3fpq4rlxcbn5z27vzq4mpzaa.us-east-2.es.amazonaws.com/fispeople-v1/_search',
+                username: 'anon',
+                password: 'anonyM0us!',
                 page_size: 10,
                 sort: [
                     {"_score" : {"order" : "desc"}},
